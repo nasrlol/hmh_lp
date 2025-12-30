@@ -1,0 +1,57 @@
+CompileFlags:
+  Add:
+    - -std=c99
+    - -xc
+
+    - -Iinclude
+    - -Wall
+    - -Wextra
+    - -Wpedantic
+    - -Wshadow
+    - -Wconversion
+    - -Wsign-conversion
+    - -Wmissing-declarations
+    - -Wundef
+    - -Wpointer-arith
+    - -Wcast-align
+    - -Wcast-qual
+    - -Wwrite-strings
+    - -Wswitch-enum
+    - -Wformat=2
+    - -Wstrict-aliasing=2
+    - -Werror=implicit-function-declaration
+    - -Werror=implicit-int
+    - -Werror=incompatible-pointer-types
+    - -Werror=return-type
+    - -Wformat-security 
+    - -Wnull-dereference
+    - -Wmisleading-indentation
+
+    -	-Wuninitialized
+    -	-Werror
+    -	-Wdouble-promotion
+    -	-Wstrict-overflow=2
+
+    - -D_POSIX_C_SOURCE=200809L
+    - "-I/include"
+
+  Remove:
+    - -std=*
+    - -O*
+    - -march=*
+    - -mtune=*
+
+
+Hover:
+  ShowAKA: true
+
+InlayHints:
+  Enabled: true
+  ParameterNames: true
+  DeducedTypes: true
+
+Completion:
+  AllScopes: true
+
+Index:
+  Background: Build
