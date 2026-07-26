@@ -7,3 +7,4 @@ tags
 /vc140.pdb
 /program.nativecodeanalysis.xml
 /program.obj
+/libraries/glm

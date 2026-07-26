@@ -31,6 +31,14 @@
 #include <windows.h>
 #endif // PLATFORM_UNIX - PLATFORM_WINDOWS
 
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+
 //-
 #include <time.h>
 #include <math.h>
@@ -46,6 +54,7 @@
 #include "base_stack.h"
 #include "base_string.h"
 #include "base_platform.h"
+#include "base_render.h"
 
 #include "base_arena.cpp"
 #include "base_stack.cpp"
@@ -54,7 +63,7 @@
 
 #include "base_rand.cpp"
 #include "base_simd.cpp"
-
+#include "base_render.cpp"
 
 
 #endif // BASE_INCLUDE_H

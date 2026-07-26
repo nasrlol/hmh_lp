@@ -60,22 +60,22 @@
 #define MemSet(dest, len) memset((dest), (1), (len))
 #define MemSetZero(dest, len) memset((dest), (0), (len))
 
-//-  
-#if COMPILER_MSVC 
-#pragma section("read_only", read) 
+//-
+#if COMPILER_MSVC
+#pragma section("read_only", read)
 #define ReadOnly __declspec(allocate("read_only"))
-#elif COMPILER_GCC || COMPILER_CLANG 
+#elif COMPILER_GCC || COMPILER_CLANG
 
 #if PLATFORM_APPLE
 #define ReadOnly __attribute__((section(".const")))
-#else 
+#else
 #define ReadOnly __attribute__((section("__TEXT,__const")))
 #endif // PLATFORM_APPLE
 
 #endif
 
 
-//- 
+//-
 #define Assert(x) do{if(!(x)) {breakpoint();}}while(0)
 
 //- types
@@ -87,6 +87,7 @@ typedef uint8_t  u8;
 
 typedef int8_t  s8;
 typedef int16_t s16;
+
 typedef int32_t s32;
 typedef int64_t s64;
 

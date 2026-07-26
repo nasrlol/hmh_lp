@@ -18,6 +18,7 @@ load_paths_base = {
     { "./src",      .relative = true, .recursive = true, },
     { "./src/code", .relative = true, .recursive = true, },
     { "./src/base", .relative = true, .recursive = true, },
+    { "./libraries", .relative = true, .recursive = true, },
 };
 
 load_paths = {
