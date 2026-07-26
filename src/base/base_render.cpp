@@ -6,7 +6,7 @@ internal void
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: disable resizing for now
 
-    GLFWwindow* window = glfwCreateWindow((int)engine->width, (int)engine->height, engine->name, glfwGetPrimaryMonitor(), NULL);
+    GLFWwindow* window = glfwCreateWindow((int)engine->width, (int)engine->height, engine->name,NULL , NULL);
 
     // main loop
     while(!glfwWindowShouldClose(window))
@@ -55,11 +55,10 @@ internal void
     goto cleanup;
     }
 
-    u32 extension_count = 0;
-    vkEnumerateInstanceExtensionProperties(NULL, &extension_count, NULL);
 
     // cleanup
     cleanup:
+    vkDestroyInstance(instance, nullptr);
     glfwDestroyWindow(window);
     glfwTerminate();
 }

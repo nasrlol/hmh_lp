@@ -7,8 +7,9 @@ struct Engine
     const char *name;
     int width;
     int height;
-    GLFWwindow *window;
-    VkExtensionProperties *properties;
+    GLFWwindow            *gl_window;
+    VkExtensionProperties *vk_properties;
+    VkInstance            *vk_instance;
 };
 
 #define RenderEntrypoint vk_render_entrypoint
