@@ -1,5 +1,9 @@
-internal void
-              render_entrypoint(Engine *engine)
+#if 0
+#include <vector>
+#endif
+
+ internal void
+    vk_render_entrypoint(Engine *engine, MemArena *arena)
     {
     glfwInit();
 
@@ -47,14 +51,96 @@ internal void
     }
     }
 
+    {
+    //  TODO: validate extension layer properties
+
+    }
+
+    #if BASE_DEBUG
+    b32 enable_validation_layer = true;
+    #else
+    b32 enable_validation_layer = false;
+    #endif
+
     VkInstance instance = {};
+    // create an instance
+    {
     VkResult result = vkCreateInstance(&create_info, NULL, &instance);
-    if(result != VK_SUCCESS)
+    if(result != VK_SUCCESS) // check the return code of the instance creation
     {
     Log("Failed to create a VkInstance");
     goto cleanup;
     }
 
+    b32 validation_support  = false;
+    // check validation support
+    {
+    ScratchArena scratch = scratch_start(arena);
+
+
+    #if 1
+    // get the layer count
+    u32 layer_count;
+    vkEnumerateInstanceLayerProperties(&layer_count, NULL);
+
+    VkLayerProperties* available_layers;
+    #endif
+    String8List *validation_layers      = PushStruct(arena, String8List);
+
+    // gather the validation layers
+    {
+    String8Node vk_layer_khronos_validation_node =  ToString8Node(str8("VK_LAYER_KHRONOS_validation"));
+    str8_list_push_node(validation_layers, &vk_layer_khronos_validation_node);
+    }
+
+    // gather the validatoin layers
+    {
+
+    #if 1
+
+    available_layers = PushArray(arena, VkLayerProperties, layer_count);
+    vkEnumerateInstanceLayerProperties(&layer_count, available_layers);
+
+    #endif
+
+    #if 0
+    u32 layer_count;
+    vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
+    std::vector<VkLayerProperties> available_layers(layer_count);
+    vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
+    #endif
+    }
+
+    {
+    breakpoint();
+    for(String8Node *current_node = validation_layers->first;
+    !is_nil_str8_node(current_node); current_node = current_node->next)
+    {
+    bool layerFound = false;
+
+    #if 0
+    for (const auto& layerProperties : availableLayers) {
+    if (cstring_is_match(layerName, layerProperties.layerName) == 0) {
+    validation_support = true;
+    break;
+    }
+    }
+    #endif
+
+    if (!layerFound) {
+    validation_support = false;
+    }
+    }
+    }
+
+    scratch_end(&scratch);
+    }
+
+    if(enable_validation_layer && validation_support) // check the avalaiobe layers after creating the instance
+    {
+
+    }
+    }
 
     // cleanup
     cleanup:

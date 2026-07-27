@@ -1,6 +1,7 @@
 version(2);
 project_name = "tb";
-patterns = {
+patterns =
+{
     "*.c",
     "*.cpp",
     "*.h",
@@ -9,11 +10,13 @@ patterns = {
     "*.4coder",
 };
 
-blacklist_patterns = {
+blacklist_patterns =
+{
     ".*",
 };
 
-load_paths_base = {
+load_paths_base =
+{
     { ".",          .relative = true, .recursive = true, },
     { "./src",      .relative = true, .recursive = true, },
     { "./src/code", .relative = true, .recursive = true, },
@@ -21,21 +24,27 @@ load_paths_base = {
     { "./libraries", .relative = true, .recursive = true, },
 };
 
-load_paths = {
+load_paths =
+{
     .win = load_paths_base,
     .linux = load_paths_base,
     .mac = load_paths_base,
 };
 
-commands = {
-    .build = { .out = "*compilation*", .footer_panel = false, .save_dirty_files = true,
+commands =
+{
+    .build = {
+        .out = "*compilation*", .footer_panel = false, .save_dirty_files = true,
         .win = "build.bat",
         .linux = "./build.sh",
-        .mac = "./build.sh", },
-    .run = { .out = "*run*", .footer_panel = false, .save_dirty_files = true,
+        .mac = "./build.sh",
+    },
+    .run = {
+        .out = "*run*", .footer_panel = false, .save_dirty_files = true,
         .win = "build\\program.exe",
         .linux = "build/tb",
-        .mac = "build/tb", },
+        .mac = "build/tb",
+    },
 };
 
 fkey_command[1] = "build";

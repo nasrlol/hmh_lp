@@ -1,6 +1,9 @@
 #ifndef BASE_INCLUDE_H
 #define BASE_INCLUDE_H
 
+#ifdef BASE_DEBUG
+#endif
+
 #if defined(__linux__) ||  defined(__APPLE__)
 #define PLATFORM_UNIX 1
 #elif defined(__linux__) && !defined(__APPLE__)

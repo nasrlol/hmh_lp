@@ -1,26 +1,27 @@
 {
-  description = "OpenGL development";
+    description = "OpenGL development";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  };
+    inputs = {
+        nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    };
 
-  outputs = { self, nixpkgs }:
-  let
-    system = "x86_64-linux";
+outputs = { self, nixpkgs }:
+              let
+              system = "x86_64-linux";
     pkgs = import nixpkgs {
-      inherit system;
+        inherit system;
     };
-  in {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = with pkgs; [
-        gcc
-        gnumake
-  	freetype
-	libx11
-	libxft
-	gdb
-      ];
+    in {
+        devShells.${system}.default = pkgs.mkShell {
+            packages = with pkgs;
+            [
+                gcc
+                gnumake
+                freetype
+                libx11
+                libxft
+                gdb
+            ];
+        };
     };
-  };
 }

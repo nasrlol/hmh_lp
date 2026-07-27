@@ -8,3 +8,6 @@ tags
 /program.nativecodeanalysis.xml
 /program.obj
 /libraries/glm
+/libraries
+*orig
+/libraries/glfw/include/GLFW

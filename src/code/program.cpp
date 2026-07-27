@@ -6,7 +6,7 @@ int ENTRYPOINT(HINSTANCE instance,
                int cmdshow)
 {
 
-    MemArena *global_arena = ArenaCreate(MiB(100));
+    MemArena *global_arena = ArenaCreate(GiB(1));
     PlatformCreateWindow(instance, 100, 100, 100, 100);
 
     Engine *engine = PushStruct(global_arena, Engine);
@@ -14,7 +14,7 @@ int ENTRYPOINT(HINSTANCE instance,
     engine->width  = 800;
     engine->height = 600;
 
-    render_entrypoint(engine);
+    RenderEntrypoint(engine, global_arena);
 
     ArenaDestroy(global_arena);
     return (0);

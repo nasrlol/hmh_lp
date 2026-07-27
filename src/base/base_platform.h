@@ -33,8 +33,7 @@ global_variable b32 Win32Running = true;
 
 #if COMPILER_MSVC
 #pragma warning(disable : 28251) // disabled the annotations warning that are defined in winbase.h
-#define  ENTRYPOINT(hinstance, prev_hinstance, cmd_line, show_cmd) \
-    WINAPI WinMain(hinstance, prev_hinstance, cmd_line, show_cmd)
+#define  ENTRYPOINT(hinstance, prev_hinstance, cmd_line, show_cmd)  WINAPI WinMain(hinstance, prev_hinstance, cmd_line, show_cmd)
 
 #endif // COMPIPILER_MSVC DISABLE WARNING
 #define PlatformCreateWindow(instance, height, width, display_x, display_y) Win32CreateWindow(instance, height, width, display_x, display_y)

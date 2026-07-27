@@ -12,8 +12,9 @@ struct Engine
     VkInstance            *vk_instance;
 };
 
+internal void vk_render_entrypoint(Engine *engine, MemArena *arena);
+
 #define RenderEntrypoint vk_render_entrypoint
-internal Engine vk_render_entrypoint(Engine *engine);
 
 
 #endif

@@ -102,6 +102,16 @@ internal String8 str8_zero();
 #endif
 
 
+//-
+ReadOnly global_variable String8  nil_str8  = {NULL, 0};
+ReadOnly global_variable String16 nil_str16 = {NULL, 0};
+ReadOnly global_variable String32 nil_str32 = {NULL, 0};
+
+ReadOnly global_variable String8Node  nil_str8_node  = {NULL, {NULL}};
+ReadOnly global_variable String16Node nil_str16_node = {NULL, {NULL}};
+ReadOnly global_variable String32Node nil_str32_node = {NULL, {NULL}};
+
+
 //- macros
 #define PushString8(arena, count) String8 { (u8 *)(PushArrayZero(arena, u8, (count))), (u64)(count)}
 #define PushString16(arena, count) String16 { (u16 *)(PushArrayZero(arena, u16, (count))), (u64)(count)}
@@ -112,8 +122,11 @@ internal String8 str8_zero();
 #define ToString16(data) String16 { (u16 *)(data), (u64)(sizeof(data) - 1)}
 #define ToString32(data) String32 { (u32 *)(data), (u64)(sizeof(data) - 1)}
 
-
 #define str8(buffer) ToString8(buffer)
+
+#define ToString8Node(string)  String8Node  {&nil_str8_node, string}
+#define ToString16Node(string) String16Node {&nil_str8_node, string}
+#define ToString32Node(string) String32Node {&nil_str8_node, string}
 
 #if COMPILER_GCC
 #pragma GCC diagnostic pop
@@ -126,15 +139,6 @@ internal String8 str8_zero();
 internal u64 cstring8_length(u8 *c);
 internal u64 cstring16_length(u16 *c);
 internal u64 cstring32_length(u32 *c);
-
-//-
-ReadOnly global_variable String8  nil_str8  = {NULL, 0};
-ReadOnly global_variable String16 nil_str16 = {NULL, 0};
-ReadOnly global_variable String32 nil_str32 = {NULL, 0};
-
-ReadOnly global_variable String8Node  nil_str8_node  = {NULL, {NULL}};
-ReadOnly global_variable String16Node nil_str16_node = {NULL, {NULL}};
-ReadOnly global_variable String32Node nil_str32_node = {NULL, {NULL}};
 
 
 #endif /* BASE_STRING_H */
