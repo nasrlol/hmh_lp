@@ -1,13 +1,10 @@
-;;
-Object tb
-;;
-EDE Project Files are auto generated:
-Do Not Edit
+;; Object tb
+;; EDE Project Files are auto generated: Do Not Edit
 (ede-proj-project "tb"
- :file "Project.ede"
- :name "tb"
- :targets nil
- :configurations '("debug" "release")
- :object-name "tb"
- :makefile-type Makefile
- :configuration-variables '("debug" (("DEBUG" . "1"))))
+  :file "Project.ede"
+  :name "tb"
+  :targets nil
+  :configurations '("debug" "release")
+  :object-name "tb"
+  :makefile-type Makefile
+  :configuration-variables '("debug" (("DEBUG" . "1"))))

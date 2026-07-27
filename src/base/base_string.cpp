@@ -3,9 +3,9 @@ str8_trim_left(String8 *buffer)
 {
     u64 index = 0;
     while(cstring_is_whitespace(buffer->data[index]))
-    {
-        ++index;
-    }
+        {
+            ++index;
+        }
 
     str8_chop_left(*buffer, index);
 }
@@ -15,9 +15,9 @@ str8_trim_right(String8 *buffer)
 {
     u64 index = buffer->size;
     while(cstring_is_whitespace(buffer->data[index]))
-    {
-        --index;
-    }
+        {
+            --index;
+        }
 
     str8_chop_right(*buffer, index);
 }
@@ -27,9 +27,9 @@ internal b32
 str8_is_match(String8 a, String8 b)
 {
     if(a.size != b.size)
-    {
-        return 0;
-    }
+        {
+            return 0;
+        }
     return (b32)(memcmp(a.data, b.data, a.size) == 0);
 }
 
@@ -39,14 +39,14 @@ str8_find(String8 *buffer, u64 start_pos, String8 element)
 
     b32 result = false;
     for(u64 index = start_pos; index < buffer->size - element.size; ++index)
-    {
-        String8 view = str8_chop_left(*buffer, index);
-        result = str8_is_match(element, view);
-        if(result)
         {
-            return index;
+            String8 view = str8_chop_left(*buffer, index);
+            result = str8_is_match(element, view);
+            if(result)
+                {
+                    return index;
+                }
         }
-    }
 
     return 0;
 }
@@ -56,9 +56,9 @@ internal b32
 str8_is_digit(String8 a, u64 start_pos)
 {
     for(u64 index = start_pos; index < a.size; ++index)
-    {
-        if(!cstring_is_digit(a.data[index])) return false;
-    }
+        {
+            if(!cstring_is_digit(a.data[index])) return false;
+        }
 
     return true;
 }
@@ -81,14 +81,14 @@ internal String8
 str8_chop_left(String8 buffer, u64 count)
 {
     if(buffer.size < count)
-    {
-        return buffer;
-    }
+        {
+            return buffer;
+        }
 
     for(u64 idx = 0; idx < count; ++idx)
-    {
-        buffer.data++;
-    }
+        {
+            buffer.data++;
+        }
     return buffer;
 }
 
@@ -96,9 +96,9 @@ internal String8
 str8_chop_right(String8 buffer, u64 count)
 {
     if(buffer.size < count)
-    {
-        return buffer;
-    }
+        {
+            return buffer;
+        }
 
     buffer.size -= count;
     return buffer;
@@ -108,15 +108,15 @@ internal void
 str8_list_push_node(String8List *list, String8Node *node)
 {
     if(list->first == NULL)
-    {
-        list->first = node;
-        list->last  = node;
-    }
+        {
+            list->first = node;
+            list->last  = node;
+        }
     else
-    {
-        list->last->next = node;
-        list->last        = node;
-    }
+        {
+            list->last->next = node;
+            list->last        = node;
+        }
     list->count += 1;
 }
 
@@ -172,17 +172,17 @@ cstring_is_match(u8 *a, u8 *b)
     u64 bs = cstring8_length(b);
 
     if(as != bs)
-    {
-        return false;
-    }
-
-    for(u64 idx = 0; idx < as; ++idx)
-    {
-        if(a[idx] != b[idx])
         {
             return false;
         }
-    }
+
+    for(u64 idx = 0; idx < as; ++idx)
+        {
+            if(a[idx] != b[idx])
+                {
+                    return false;
+                }
+        }
     return true;
 }
 
@@ -275,10 +275,10 @@ internal String8
 remove_null_terminator(MemArena *arena, String8 c)
 {
     if ((c.size > 0) && (c.data[c.size - 1] == '\0'))
-    {
-        String8 chopped = {c.data, c.size - 1};
-        return chopped;
-    }
+        {
+            String8 chopped = {c.data, c.size - 1};
+            return chopped;
+        }
 
 
     return c;

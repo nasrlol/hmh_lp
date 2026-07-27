@@ -26,11 +26,11 @@ win32_log(String8List messages)
     HANDLE handle_stdout = GetStdHandle(STD_OUTPUT_HANDLE);
     u64 count = 0;
     for(String8Node *node = messages.first; count < messages.count; node = node->next)
-    {
-        DWORD written = 0;
-        WriteConsoleA(handle_stdout, node->value.data, (DWORD)(node->value.size), &written, NULL);
-        ++count;
-    }
+        {
+            DWORD written = 0;
+            WriteConsoleA(handle_stdout, node->value.data, (DWORD)(node->value.size), &written, NULL);
+            ++count;
+        }
 }
 
 //
@@ -49,9 +49,9 @@ internal u64
 safe_truncate_64(u64 value)
 {
     if(value <= (u64)~0)
-    {
-        return 0; // TODO: this needs to be an assert. removed it for now to fix the include issues.
-    }
+        {
+            return 0; // TODO: this needs to be an assert. removed it for now to fix the include issues.
+        }
     return (u64)value;
 }
 
@@ -70,22 +70,22 @@ win32_file_write(String8 data, String8 path)
     HANDLE file_handle = CreateFileA((LPCSTR)path.data, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
 
     if(file_handle != INVALID_HANDLE_VALUE)
-    {
-        DWORD bytes_written;
-        if(WriteFile(file_handle, data.data, (DWORD)data.size, &bytes_written, 0))
         {
-            result = (bytes_written == data.size);
+            DWORD bytes_written;
+            if(WriteFile(file_handle, data.data, (DWORD)data.size, &bytes_written, 0))
+                {
+                    result = (bytes_written == data.size);
+                }
+            else
+                {
+                    Log("Writing the file was unsuccessful");
+                }
+            CloseHandle(file_handle);
         }
-        else
-        {
-            Log("Writing the file was unsuccessful");
-        }
-        CloseHandle(file_handle);
-    }
     else
-    {
-        Log("File handle has the INVALID_HANDLE_VALUE flag.");
-    }
+        {
+            Log("File handle has the INVALID_HANDLE_VALUE flag.");
+        }
 
     return result;
 }
@@ -97,54 +97,54 @@ win32_file_load(MemArena *arena, u8 *file)
 
     HANDLE file_handle = CreateFileA((LPCSTR)file, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
     if(file_handle != INVALID_HANDLE_VALUE)   // success
-    {
-
-        LARGE_INTEGER size;
-        if(GetFileSizeEx(file_handle, &size))
         {
-            u32 file_size32 = (u32)safe_truncate_64(size.QuadPart);
-            result = PushString8(arena, file_size32);
-            if(result.data)
-            {
 
-                DWORD bytes_read;
-                if(ReadFile(file_handle, result.data, file_size32, &bytes_read, 0) && (file_size32 == bytes_read))
+            LARGE_INTEGER size;
+            if(GetFileSizeEx(file_handle, &size))
                 {
-                    result.size = file_size32;
-                    CloseHandle(file_handle);
+                    u32 file_size32 = (u32)safe_truncate_64(size.QuadPart);
+                    result = PushString8(arena, file_size32);
+                    if(result.data)
+                        {
+
+                            DWORD bytes_read;
+                            if(ReadFile(file_handle, result.data, file_size32, &bytes_read, 0) && (file_size32 == bytes_read))
+                                {
+                                    result.size = file_size32;
+                                    CloseHandle(file_handle);
+                                }
+                            else
+                                {
+
+                                    Log("Failed to read file");
+                                    if(result.data)  VirtualFree(result.data, 0, MEM_RELEASE);
+
+                                    //
+                                    // TODO: Luca says in his code result.data = 0; but doesn't he mean the size. seeing that
+                                    // we just freed that memory? Or is he zeroing the memory? we don't have access to it any more
+                                    // so i don't see the point?
+                                    // TODO: also why aren't we using memory arenas in this case and just doing a new allocation/
+                                    //
+
+                                    // result.Data = 0;
+                                    result.size = 0;
+
+                                }
+                        }
+                    else
+                        {
+                            Log("received data is NULL");
+                        }
                 }
-                else
-                {
-
-                    Log("Failed to read file");
-                    if(result.data)  VirtualFree(result.data, 0, MEM_RELEASE);
-
-                    //
-                    // TODO: Luca says in his code result.data = 0; but doesn't he mean the size. seeing that
-                    // we just freed that memory? Or is he zeroing the memory? we don't have access to it any more
-                    // so i don't see the point?
-                    // TODO: also why aren't we using memory arenas in this case and just doing a new allocation/
-                    //
-
-                    // result.Data = 0;
-                    result.size = 0;
-
-                }
-            }
             else
-            {
-                Log("received data is NULL");
-            }
+                {
+                    Log("received data is of size 0");
+                }
         }
-        else
-        {
-            Log("received data is of size 0");
-        }
-    }
     else
-    {
-        Log("received invalid handle");
-    }
+        {
+            Log("received invalid handle");
+        }
     return result;
 }
 
@@ -168,18 +168,18 @@ win32_window_proc(HWND handle,
                   LPARAM lparam)
 {
     switch(messages)
-    {
-    case WM_DESTROY:
-    {
-        Win32Running = false;
+        {
+        case WM_DESTROY:
+        {
+            Win32Running = false;
 
-    }
-    break;
-    case WM_PAINT:
-    {
-        // TODO: ...
-    } break;
-    }
+        }
+        break;
+        case WM_PAINT:
+        {
+            // TODO: ...
+        } break;
+        }
 
     return DefWindowProcA(handle, messages, wparam, lparam);
 }
@@ -202,21 +202,21 @@ win32_create_window(HINSTANCE instance,
 
     HWND window_handle = {};
     if(RegisterClass(&window_class))
-    {
-        window_handle = CreateWindowEx(0,
-                                       window_class.lpszClassName,
-                                       "[tb] program",
-                                       WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-                                       CW_USEDEFAULT,
-                                       CW_USEDEFAULT,
-                                       CW_USEDEFAULT,
-                                       CW_USEDEFAULT,
-                                       0,
-                                       0,
-                                       instance,
-                                       0);
+        {
+            window_handle = CreateWindowEx(0,
+                                           window_class.lpszClassName,
+                                           "[tb] program",
+                                           WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+                                           CW_USEDEFAULT,
+                                           CW_USEDEFAULT,
+                                           CW_USEDEFAULT,
+                                           CW_USEDEFAULT,
+                                           0,
+                                           0,
+                                           instance,
+                                           0);
 
-    }
+        }
 
     Assert(window_handle);
     ShowWindow(window_handle, true);
@@ -224,19 +224,19 @@ win32_create_window(HINSTANCE instance,
     MSG message = { };
 
     while(Win32Running)
-    {
-        b32 result = GetMessage(&message, 0, 0, 0);
+        {
+            b32 result = GetMessage(&message, 0, 0, 0);
 
-        if(result > 0)
-        {
-            TranslateMessage(&message);
-            DispatchMessage(&message);
+            if(result > 0)
+                {
+                    TranslateMessage(&message);
+                    DispatchMessage(&message);
+                }
+            else
+                {
+                    break;
+                }
         }
-        else
-        {
-            break;
-        }
-    }
 }
 
 

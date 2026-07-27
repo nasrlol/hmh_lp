@@ -10,14 +10,14 @@ x11_create_window(MemArena *arena,
 
     Display *main_display = XOpenDisplay(0);
     if(!main_display)
-    {
-        Log("Error! Failed to open x11 display. Are you on X11?");
-    }
+        {
+            Log("Error! Failed to open x11 display. Are you on X11?");
+        }
     else
-    {
-        Log("Successfully opened x11 display?\n");
-        Log("Display: %p\n", main_display);
-    }
+        {
+            Log("Successfully opened x11 display?\n");
+            Log("Display: %p\n", main_display);
+        }
 
     Window root = XDefaultRootWindow(main_display);
     int screen = DefaultScreen(main_display);
@@ -122,9 +122,9 @@ unix_library_close(Library *library)
     int result = dlclose(library);
 
     if(result)
-    {
+        {
 
-    }
+        }
 
     return result;
 }
@@ -145,19 +145,19 @@ unix_file_load(MemArena *arena, String8 path)
 
     s32 file = open((const char *)path.data, O_RDONLY);
     if(file == -1)
-    {
-        Log("An error occurred. File was not loaded. error code: %s", file);
-        return (String8)
         {
-            0
-        };
-    }
+            Log("An error occurred. File was not loaded. error code: %s", file);
+            return (String8)
+            {
+                0
+            };
+        }
 
     if(fstat(file, &sbuf) == -1)
-    {
-        close(file);
-        return str8_zero();
-    }
+        {
+            close(file);
+            return str8_zero();
+        }
 
     result      = PushString8(arena, (u64)sbuf.st_size);
     result.size = (u64)sbuf.st_size;
@@ -174,24 +174,24 @@ unix_file_write(String8 data, String8 path)
     String8 result = {0};
     s32     file   = open((const char *)path.data, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if(file == -1)
-    {
-        return (String8)
         {
-            0
-        };
-    }
+            return (String8)
+            {
+                0
+            };
+        }
 
     u64 written = 0;
     while(written < data.size)
-    {
-        s64 err = write(file, data.data + written, data.size - written);
-        if(err == -1)
         {
-            close(file);
-            return str8_zero();
+            s64 err = write(file, data.data + written, data.size - written);
+            if(err == -1)
+                {
+                    close(file);
+                    return str8_zero();
+                }
+            written += err;
         }
-        written += err;
-    }
 
     close(file);
     result = data;

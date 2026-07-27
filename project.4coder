@@ -17,10 +17,10 @@ blacklist_patterns =
 
 load_paths_base =
 {
-    { ".",          .relative = true, .recursive = true, },
-    { "./src",      .relative = true, .recursive = true, },
-    { "./src/code", .relative = true, .recursive = true, },
-    { "./src/base", .relative = true, .recursive = true, },
+    { ".",           .relative = true, .recursive = true, },
+    { "./src",       .relative = true, .recursive = true, },
+    { "./src/code",  .relative = true, .recursive = true, },
+    { "./src/base",  .relative = true, .recursive = true, },
     { "./libraries", .relative = true, .recursive = true, },
 };
 
@@ -49,4 +49,3 @@ commands =
 
 fkey_command[1] = "build";
 fkey_command[2] = "run";
-
