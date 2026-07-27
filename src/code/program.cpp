@@ -9,7 +9,7 @@ int ENTRYPOINT(HINSTANCE instance,
     MemArena *global_arena = ArenaCreate(GiB(1));
     PlatformCreateWindow(instance, 100, 100, 100, 100);
 
-    Engine *engine = PushStruct(global_arena, Engine);
+    Engine *engine = PushStructZero(global_arena, Engine);
     engine->name   = "TB";
     engine->width  = 800;
     engine->height = 600;

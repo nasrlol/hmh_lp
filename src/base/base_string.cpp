@@ -1,3 +1,43 @@
+
+internal b32
+is_nil_str8(String8 *a)
+{
+    return (a == &nil_str8);
+}
+
+internal b32
+is_nil_str8_node(String8Node *a)
+{
+    return (a == &nil_str8_node);
+}
+
+internal b32
+is_nil_str16(String16 *a)
+{
+    return (a == &nil_str16);
+}
+
+internal b32
+is_nil_str16_node(String16Node *a)
+{
+    return (a == &nil_str16_node);
+}
+
+internal b32
+is_nil_str32(String32 *a)
+{
+    return (a == &nil_str32);
+}
+
+internal b32
+is_nil_str32_node(String32Node *a)
+{
+    return (a == &nil_str32_node);
+}
+
+
+
+
 internal void
 str8_trim_left(String8 *buffer)
 {
@@ -27,9 +67,9 @@ internal b32
 str8_is_match(String8 a, String8 b)
 {
     if(a.size != b.size)
-        {
-            return 0;
-        }
+    {
+        return 0;
+    }
     return (b32)(memcmp(a.data, b.data, a.size) == 0);
 }
 
@@ -69,6 +109,21 @@ str8_append_u8_element(String8 buffer, u8 c)
     buffer.data[buffer.size] = c;
     buffer.size += 1;
     return buffer;
+}
+
+internal int
+str8_append(String8 *a, String8 *b)
+{
+  if(is_nil_str8(a) || is_nil_str8(b))
+  {
+    return 1;
+  }
+
+  a->size += b->size;
+  a->data++;
+  a->data = b->data;
+  return 0;
+
 }
 
 internal String8
@@ -186,42 +241,6 @@ cstring_is_match(u8 *a, u8 *b)
     return true;
 }
 
-internal b32
-is_nil_str8(String8 *a)
-{
-    return (a == &nil_str8);
-}
-
-internal b32
-is_nil_str8_node(String8Node *a)
-{
-    return (a == &nil_str8_node);
-}
-
-internal b32
-is_nil_str16(String16 *a)
-{
-    return (a == &nil_str16);
-}
-
-internal b32
-is_nil_str16_node(String16Node *a)
-{
-    return (a == &nil_str16_node);
-}
-
-internal b32
-is_nil_str32(String32 *a)
-{
-    return (a == &nil_str32);
-}
-
-internal b32
-is_nil_str32_node(String32Node *a)
-{
-    return (a == &nil_str32_node);
-}
-
 internal u64
 cstring8_length(u8 *c)
 {
@@ -229,7 +248,7 @@ cstring8_length(u8 *c)
 
     if(!c) return 0;
     for(; *c != 0; ++c);
-    return (u64)(p - c);
+    return (u64)(c - p);
 
 }
 

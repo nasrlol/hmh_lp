@@ -8,12 +8,6 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
 
     GLFWwindow* window = glfwCreateWindow((int)engine->width, (int)engine->height, engine->name,NULL, NULL);
 
-    // main loop
-    while(!glfwWindowShouldClose(window))
-    {
-	glfwPollEvents();
-    }
-
     VkApplicationInfo app_info{};
     VkInstanceCreateInfo create_info{};
 
@@ -61,7 +55,7 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
     vkEnumerateInstanceLayerProperties(&layer_count, NULL);
 
     VkLayerProperties *available_layers;
-    String8List       *validation_layers = PushStruct(arena, String8List);
+    String8List       *validation_layers = PushStructZero(arena, String8List);
 
     // gather the validation layers
     {
@@ -73,9 +67,9 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
     {
 	available_layers = PushArrayZero(arena, VkLayerProperties, layer_count);
 	vkEnumerateInstanceLayerProperties(&layer_count, available_layers);
-	breakpoint();
     }
 
+    breakpoint();
     for(String8Node *current_node = validation_layers->first; !is_nil_str8_node(current_node); current_node = current_node->next)
     {
 	for(u32 index = 0; index < layer_count; ++index)
@@ -92,26 +86,53 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
       
     // check if we found that specific layer and we can continue
 
-    if(enable_validation_layer && layer_found) // check the avalaiobe layers after creating the instance
+    if(enable_validation_layer && !layer_found) // check the avalaiobe layers after creating the instance
     {
-	Log("requested validation layer not found!");
-	goto cleanup;
-    }
+	if(!layer_found)
+	{
+	    Log("requested validation layer not found!");
+	    goto cleanup;
+	}
 
-    create_info.enabledLayerCount = layer_count;
-    create_info.ppEnabledLayerNames = available_layers; // TODO: maybe use the String8 to get a single buffer that we can pass to available layers
+
+	// extract names, null terminated
+	String8 *names_in_one_str8_lit = PushStructZero(arena, String8);
+	for(u32 index = 0; index < layer_count; ++index)
+	{
+
+	    VkLayerProperties *current_layer = &available_layers[index];
+	    String8 current_layer_name       = str8(current_layer->layerName);
+	    int res = str8_append(names_in_one_str8_lit, &current_layer_name);
+	    if(res != 0)
+	    {
+		breakpoint();
+	    }
+	}
+
+	create_info.enabledLayerCount   = layer_count;
+	create_info.ppEnabledLayerNames = (const char *const *)names_in_one_str8_lit->data; // TODO: maybe use the String8 to get a single buffer that we can pass to available layers
+	breakpoint();
+
+    } 
+
 
     VkInstance instance = {};
     VkResult result = vkCreateInstance(&create_info, NULL, &instance);
+
     if(result != VK_SUCCESS) // check the return code of the instance creation
     {
 	Log("Failed to create a VkInstance");
 	goto cleanup;
     }
 
-
-
     scratch_end(&scratch);
+
+    // main loop
+    while(!glfwWindowShouldClose(window))
+    {
+	glfwPollEvents();
+    }
+
 
 
   cleanup:

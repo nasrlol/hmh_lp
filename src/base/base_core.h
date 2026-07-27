@@ -76,6 +76,19 @@
 
 
 //-
+
+typedef enum Result Result;
+
+enum Result
+{
+  Success,
+  Fail,
+  Warning,
+  Error,
+};
+
+
+//-
 #define Assert(x) do{if(!(x)) {breakpoint();}}while(0)
 
 //- types

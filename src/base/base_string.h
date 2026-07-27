@@ -86,15 +86,15 @@ internal b32 cstring_is_newline(u8 point);
 internal b32 cstring_is_match(u8 *a, u8 *b);
 
 //- string8
-internal u64     str8_skip_element(String8 *buffer, u64 start_pos, String8 *element);
-internal u64     str8_find_element(String8 *buffer, u64 start_pos, String8 *element);
-internal b32     str8_is_match(String8 a, String8 b);
-internal void    str8_append_u8_element(String8 *buf, u8 c);
-internal void    str8_append_str8_element(String8 *a, String8 *b);
-internal void    str8_trim_right();
-internal String8 str8_chop_left(String8 buffer, u64 count);
-internal String8 str8_chop_right(String8 buffer, u64 count);
-internal String8 str8_zero();
+internal u64           str8_skip_element(String8 *buffer, u64 start_pos, String8 *element);
+internal u64           str8_find_element(String8 *buffer, u64 start_pos, String8 *element);
+internal b32           str8_is_match(String8 a, String8 b);
+internal void          str8_append_u8_element(String8 *buf, u8 c);
+internal int           str8_append(String8 *a, String8 *b);
+internal void          str8_trim_right();
+internal String8       str8_chop_left(String8 buffer, u64 count);
+internal String8       str8_chop_right(String8 buffer, u64 count);
+internal String8       str8_zero();
 
 #if COMPILER_GCC
 #pragma GCC diagnostic push
@@ -118,7 +118,7 @@ ReadOnly global_variable String32Node nil_str32_node = {NULL, {NULL}};
 #define PushString32(arena, count) String32 { (u32 *)(PushArrayZero(arena, u32, (count))), (u64)(count)}
 
 
-#define ToString8(data)  String8  { (u8 *)(data),  (u64)(sizeof(data) - 1)}
+#define ToString8(data)  String8  { (u8 *)(data),  (u64)(cstring8_length((u8 *)data) - 1)}
 #define ToString16(data) String16 { (u16 *)(data), (u64)(sizeof(data) - 1)}
 #define ToString32(data) String32 { (u32 *)(data), (u64)(sizeof(data) - 1)}
 
