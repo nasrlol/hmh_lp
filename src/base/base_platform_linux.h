@@ -3,20 +3,17 @@
 
 #define X11 1
 
-typedef struct linux_wm_state linux_wm_state;
-struct linux_wm_state
+typedef struct LinuxWindowHandle LinuxWindowHandle;
+struct LinuxWindowHandle
 {
-    Display *display;
+    Display *display; 
     Window   window;
-    s32      screen;
 };
 
-
 #if X11
-
-internal linux_wm_state x11_create_window(MemArena *arena, u32 window_height, u32 window_width, u32 disp_x, u32 disp_y);
-internal void x11_draw(linux_wm_state *s, s32 start_x, s32 end_x, s32 start_y, s32 end_y);
-internal s32 x11_cleanup(linux_wm_state *s);
+internal LinuxWindowHandle x11_create_window(MemArena *arena, u32 window_height, u32 window_width, u32 disp_x, u32 disp_y);
+internal void x11_draw(LinuxWindowHandle *s, s32 start_x, s32 end_x, s32 start_y, s32 end_y);
+internal s32 x11_cleanup(LinuxWindowHandle *s);
 internal s32 x11_read_input();
 
 
@@ -38,8 +35,8 @@ struct Library
 #endif
 
 internal Library unix_library_load(MemArena *arena, String8 path);
-internal void   *unix_library_get_proc(Library *library, String8 proc_name);
-internal int     unix_library_close(Library *library);
+internal void *unix_library_get_proc(Library *library, String8 proc_name);
+internal int unix_library_close(Library *library);
 internal b32 unix_file_exists(String8 path);
 internal String8 unix_file_load(MemArena *arena, String8 path);
 internal String8 unix_file_write(String8 data, String8 path);

@@ -111,20 +111,22 @@ str8_append_u8_element(String8 buffer, u8 c)
     return buffer;
 }
 
-internal int
+internal b32
 str8_append(String8 *a, String8 *b)
 {
-  if(is_nil_str8(a) || is_nil_str8(b))
+  if(is_nil_str8(a) || is_nil_str8(b) || a == NULL || b == NULL)
   {
-    return 1;
+    breakpoint();
+    return false;
   }
 
-  a->size += b->size;
-  a->data++;
-  a->data = b->data;
-  return 0;
+  memcpy(a->data + a->size, b->data, b->size);
+  a->size += b->size; 
+
+  return true;
 
 }
+
 
 internal String8
 str8_zero()

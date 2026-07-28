@@ -27,7 +27,7 @@
 /* assert an expression and output the file and the line */
 #define internal static
 #define global_variable static
-#define local_persist  static
+#define local_persist static
 
 #define arena_align (2 * sizeof(void *))
 
@@ -76,9 +76,7 @@
 
 
 //-
-
 typedef enum Result Result;
-
 enum Result
 {
   Success,
@@ -86,7 +84,6 @@ enum Result
   Warning,
   Error,
 };
-
 
 //-
 #define Assert(x) do{if(!(x)) {breakpoint();}}while(0)

@@ -1,12 +1,14 @@
+#define BASE_DEBUG
+
 internal void
 vk_render_entrypoint(Engine *engine, MemArena *arena)
 {
-    glfwInit();
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: disable resizing for now
+    breakpoint();
 
-    GLFWwindow* window = glfwCreateWindow((int)engine->width, (int)engine->height, engine->name,NULL, NULL);
+    {
+	// TODO: create a window using the platform layer
+    }
 
     VkApplicationInfo app_info{};
     VkInstanceCreateInfo create_info{};
@@ -26,50 +28,37 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
 	create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	create_info.pApplicationInfo = &app_info;
 
-	// extensions filled by opengl
-	{
-	    u32 glfw_extensions_count = 0;
-	    const char** glfw_extensions;
-
-	    glfw_extensions= glfwGetRequiredInstanceExtensions(&glfw_extensions_count);
-
-	    create_info.enabledExtensionCount   = glfw_extensions_count;
-	    create_info.ppEnabledExtensionNames = glfw_extensions;
-	}
+#if 0
+	// TODO: fill in the extenions for windows.
+	// where do we find these?
+	create_info.enabledExtensionCount   = ...;
+	create_info.ppEnabledExtensionNames = ...;
+#endif
     }
 
-#if BASE_DEBUG
-    b32 enable_validation_layer = true;
+
+#ifdef  BASE_DEBUG
+    bool enable_validation_layer = true;
 #else
-    b32 enable_validation_layer = false;
+    bool enable_validation_layer = false;
 #endif
 
 
-    b32 layer_found  = false;
+    bool layer_found  = false;
     // check validation support
     ScratchArena scratch = scratch_start(arena);
 
 
-    // get the layer count
+    // gather the validation layers and available layers
     u32 layer_count;
     vkEnumerateInstanceLayerProperties(&layer_count, NULL);
-
     VkLayerProperties *available_layers;
     String8List       *validation_layers = PushStructZero(arena, String8List);
+    String8Node vk_layer_khronos_validation_node = ToString8Node(str8("VK_LAYER_KHRONOS_validation"));
+    str8_list_push_node(validation_layers, &vk_layer_khronos_validation_node);
+    available_layers = PushArrayZero(arena, VkLayerProperties, layer_count);
+    vkEnumerateInstanceLayerProperties(&layer_count, available_layers);
 
-    // gather the validation layers
-    {
-	String8Node vk_layer_khronos_validation_node = ToString8Node(str8("VK_LAYER_KHRONOS_validation"));
-	str8_list_push_node(validation_layers, &vk_layer_khronos_validation_node);
-    }
-
-    // gather the validation layers
-    {
-	available_layers = PushArrayZero(arena, VkLayerProperties, layer_count);
-	vkEnumerateInstanceLayerProperties(&layer_count, available_layers);
-    }
-
-    breakpoint();
     for(String8Node *current_node = validation_layers->first; !is_nil_str8_node(current_node); current_node = current_node->next)
     {
 	for(u32 index = 0; index < layer_count; ++index)
@@ -86,12 +75,11 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
       
     // check if we found that specific layer and we can continue
 
-    if(enable_validation_layer && !layer_found) // check the avalaiobe layers after creating the instance
+    if(enable_validation_layer) // check the avalaiobe layers after creating the instance
     {
 	if(!layer_found)
 	{
 	    Log("requested validation layer not found!");
-	    goto cleanup;
 	}
 
 
@@ -99,14 +87,17 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
 	String8 *names_in_one_str8_lit = PushStructZero(arena, String8);
 	for(u32 index = 0; index < layer_count; ++index)
 	{
-
 	    VkLayerProperties *current_layer = &available_layers[index];
-	    String8 current_layer_name       = str8(current_layer->layerName);
-	    int res = str8_append(names_in_one_str8_lit, &current_layer_name);
-	    if(res != 0)
+	    String8 current_layer_name;       
+	    if(current_layer != NULL)
+	    {
+		current_layer_name       = str8(current_layer->layerName);
+	    }
+	    else
 	    {
 		breakpoint();
 	    }
+	    str8_append(names_in_one_str8_lit, &current_layer_name);
 	}
 
 	create_info.enabledLayerCount   = layer_count;
@@ -116,27 +107,25 @@ vk_render_entrypoint(Engine *engine, MemArena *arena)
     } 
 
 
-    VkInstance instance = {};
+
+    VkInstance instance = VK_NULL_HANDLE; 
     VkResult result = vkCreateInstance(&create_info, NULL, &instance);
 
     if(result != VK_SUCCESS) // check the return code of the instance creation
     {
 	Log("Failed to create a VkInstance");
-	goto cleanup;
     }
-
-    scratch_end(&scratch);
-
-    // main loop
-    while(!glfwWindowShouldClose(window))
+    else
     {
-	glfwPollEvents();
+	scratch_end(&scratch);
+
+	{
+	    // TODO: window polling untill it closes
+	}
     }
 
-
-
-  cleanup:
-    vkDestroyInstance(instance, nullptr);
-    glfwDestroyWindow(window);
-    glfwTerminate();
+    if(instance != VK_NULL_HANDLE)
+    {
+	vkDestroyInstance(instance, nullptr);
+    }
 }

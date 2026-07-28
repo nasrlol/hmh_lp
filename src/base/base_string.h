@@ -128,6 +128,7 @@ ReadOnly global_variable String32Node nil_str32_node = {NULL, {NULL}};
 #define ToString16Node(string) String16Node {&nil_str8_node, string}
 #define ToString32Node(string) String32Node {&nil_str8_node, string}
 
+
 #if COMPILER_GCC
 #pragma GCC diagnostic pop
 #endif

@@ -1,6 +1,24 @@
 #ifndef BASE_PLATFORM_H
 #define BASE_PLATFORM_H
 
+struct window
+{
+
+#if PLATFORM_LINUX
+    LinuxWindowHandle window_handle;
+#elif PLATFORM_WINDOWS
+    Win32WindowHandle window_handle;
+#endif
+    int width;
+    int height;
+    int display_x;
+    int display_y;
+    const char *name;
+};
+
+    
+#endif
+
 // TODO: merge the 2 differnet header files. they should be working correctly at the moment but it's kind of a mess.
 
 //- linux layer
@@ -27,13 +45,10 @@
 
 global_variable b32 Win32Running = true;
 
-
-
 //-
-
 #if COMPILER_MSVC
 #pragma warning(disable : 28251) // disabled the annotations warning that are defined in winbase.h
-#define  ENTRYPOINT(hinstance, prev_hinstance, cmd_line, show_cmd)  WINAPI WinMain(hinstance,prev_hinstance,cmd_line, show_cmd)
+#define  ENTRYPOINT(hinstance, prev_instance, cmd_line, show_cmd) int WINAPI WinMain(hinstance, prev_instance, cmd_line, show_cmd)
 
 #endif // COMPIPILER_MSVC DISABLE WARNING
 #define PlatformCreateWindow(instance, height, width, display_x, display_y) Win32CreateWindow(instance, height, width, display_x, display_y)
@@ -45,6 +60,20 @@ global_variable b32 Win32Running = true;
 
 //-
 #if PLATFORM_WINDOWS
+
+typedef struct PlatformWindow PlatformWindow;
+
+
+typedef enum KeyboardCode KeyboardCode;
+enum KeyboardCode
+{
+    
+
+
+};
+
+void win32_handle_keyboard_input();
+#define PlatformHandleInput() win32_handle_keyboard_input();
 
 internal void win32_log(String8List messages);
 internal b32  win32_os_exit();
