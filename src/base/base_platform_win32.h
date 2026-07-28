@@ -5,8 +5,8 @@ typedef struct Win32WindowHandle Win32WindowHandle;
 struct Win32WindowHandle
 {
     HWND window_handle;
-    Hinstance instance;
-
+    HINSTANCE instance;
+    HDC dc;
 };
 
 #define Win32CreateWindow(instance, height, width, display_x, display_y)  win32_create_window(instance, height, width, display_x, display_y)
@@ -22,8 +22,5 @@ win32_load_library()
 win32_library_get_proc()
 win32_window_proc(handle, messages, wparam, lparam)
 #endif
-
-
-
 
 #endif // BASE_PLATFORM_WI32_H

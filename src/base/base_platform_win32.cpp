@@ -184,18 +184,8 @@ win32_window_proc(HWND handle, UINT messages, WPARAM wparam, LPARAM lparam)
     return DefWindowProcA(handle, messages, wparam, lparam);
 }
 
-
-internal Win32Window
-win32_fill_window_struct_in_with_defaults(Win32Window *window)
-{
-    window->height     = CW_USEDEFAULT;
-    window->width      = CW_USEDEFAULT;
-    window->display_x  = CW_USEDEFAULT;
-    window->display_y  = CW_USEDEFAULT;
-}
-
 internal HWND
-win32_create_window(HINSTANCE instance)
+win32_create_window(HINSTANCE instance, int height, int width, int display_x, int display_y, const char *window_name)
 {
     WNDCLASS window_class = {0};
 
@@ -203,19 +193,19 @@ win32_create_window(HINSTANCE instance)
     window_class.style         = CS_OWNDC|CS_HREDRAW|CS_VREDRAW;
     window_class.lpfnWndProc   = win32_window_proc;
     window_class.hInstance     = instance;
-    window_class.lpszClassName = window->name; 
+    window_class.lpszClassName = window_name; 
 
     HWND window_handle = {};
     if(RegisterClass(&window_class))
     {
 	window_handle = CreateWindowEx(0,
 				       window_class.lpszClassName,
-				       window->name, 
+				       window_name, 
 				       WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-				       window->height,
-				       window->width,
-				       window->display_x,
-				       window->display_y,
+				       height,
+				       width,
+				       display_x,
+				       display_y,
 				       0,
 				       0,
 				       instance,
@@ -227,7 +217,6 @@ win32_create_window(HINSTANCE instance)
     ShowWindow(window_handle, true);
 
     return window_handle;
-
 }
 
 internal void

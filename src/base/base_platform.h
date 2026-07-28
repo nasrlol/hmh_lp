@@ -1,14 +1,11 @@
 #ifndef BASE_PLATFORM_H
 #define BASE_PLATFORM_H
 
-struct window
-{
 
-#if PLATFORM_LINUX
-    LinuxWindowHandle window_handle;
-#elif PLATFORM_WINDOWS
-    Win32WindowHandle window_handle;
-#endif
+typedef struct PlatformWindow PlatformWindow;
+struct PlatformWindow
+{
+    void *window_handle;
     int width;
     int height;
     int display_x;
@@ -16,8 +13,6 @@ struct window
     const char *name;
 };
 
-    
-#endif
 
 // TODO: merge the 2 differnet header files. they should be working correctly at the moment but it's kind of a mess.
 
@@ -61,7 +56,6 @@ global_variable b32 Win32Running = true;
 //-
 #if PLATFORM_WINDOWS
 
-typedef struct PlatformWindow PlatformWindow;
 
 
 typedef enum KeyboardCode KeyboardCode;
